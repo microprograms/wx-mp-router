@@ -28,6 +28,7 @@ public class WxMpEndpointServlet extends HttpServlet {
     private void initWeixin() {
         try (InputStream is = ClassLoader.getSystemResourceAsStream("config.xml")) {
             WxMpConfig config = WxMpConfig.fromXml(is);
+            log.info("initWeixin -> {}", config.toString());
             wxMpService = new WxMpServiceApacheHttpClientImpl();
             wxMpService.setWxMpConfigStorage(config);
         } catch (Exception e) {
@@ -37,7 +38,6 @@ public class WxMpEndpointServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -46,19 +46,19 @@ public class WxMpEndpointServlet extends HttpServlet {
         String timestamp = request.getParameter("timestamp");
 
         if (!this.wxMpService.checkSignature(timestamp, nonce, signature)) {
-            // 消息签名不正确，说明不是公众平台发过来的消息
+            log.error("消息签名不正确，说明不是公众平台发过来的消息 -> signature={}, nonce={}, timestamp={}", signature, nonce, timestamp);
             response.getWriter().println("非法请求");
             return;
         }
 
         String echostr = request.getParameter("echostr");
         if (StringUtils.isNotBlank(echostr)) {
-            // 说明是一个仅仅用来验证的请求，回显echostr
+            log.info("说明是一个仅仅用来验证的请求，回显echostr -> signature={}, nonce={}, timestamp={}, echostr={}", signature, nonce, timestamp, echostr);
             response.getWriter().println(echostr);
             return;
         }
 
+        log.error("不可识别的加密类型");
         response.getWriter().println("不可识别的加密类型");
-        return;
     }
 }
