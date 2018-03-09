@@ -4,7 +4,7 @@
 
     <groupId>com.github.microprograms</groupId>
     <artifactId>wx-mp-router</artifactId>
-    <version>0.0.11</version>
+    <version>0.0.12</version>
     <packaging>war</packaging>
 
     <name>wx-mp-router</name>
@@ -82,6 +82,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>24.0-jre</version>
+        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
