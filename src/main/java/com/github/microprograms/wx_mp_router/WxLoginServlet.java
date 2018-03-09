@@ -33,9 +33,9 @@ public class WxLoginServlet extends HttpServlet {
             state.put("redirect_uri", redirect_uri);
             Config config = Fn.getConfig();
             String wxOAuth2RedirectUri = config.getString("wxOAuth2RedirectUri");
-            String appId = config.getString("appId");
+            String wxAppId = config.getString("wxAppId");
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-            response.setHeader("Location", oauth2buildAuthorizationUrl(appId, wxOAuth2RedirectUri, scope, URIUtil.encodeURIComponent(state.toJSONString())));
+            response.setHeader("Location", oauth2buildAuthorizationUrl(wxAppId, wxOAuth2RedirectUri, scope, URIUtil.encodeURIComponent(state.toJSONString())));
         } catch (Exception e) {
             log.error("", e);
         }
