@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.github.microprograms.wx_mp_router.utils.ApiUtils;
+import com.github.microprograms.wx_mp_router.utils.Fn;
 
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
@@ -36,13 +38,23 @@ public class OAuth2Servlet extends HttpServlet {
             JSONObject state = JSON.parseObject(request.getParameter("state"));
             log.info("oauth2 -> state={}", state.toJSONString());
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-            response.setHeader("Location", String.format("%s?token=%s", state.getString("redirect_uri"), getToken(user.getOpenId())));
+            response.setHeader("Location", String.format("%s?token=%s", state.getString("redirect_uri"), getToken(user.getOpenId(), user.getNickname(), user.getHeadImgUrl())));
         } catch (Exception e) {
             log.error("", e);
         }
     }
 
-    private String getToken(String wxOpenId) {
-        return wxOpenId;
+    private static String getToken(String wxOpenId, String wxNicknme, String wxAvatarImgUrl) {
+        try {
+            JSONObject param = new JSONObject();
+            param.put("apiName", "car_carat_app_api.System_WxLogin_Api");
+            param.put("wxOpenId", wxOpenId);
+            param.put("wxNicknme", wxNicknme);
+            param.put("wxAvatarImgUrl", wxAvatarImgUrl);
+            String responseString = ApiUtils.post(Fn.getConfig().getString("loginApiUrl"), param);
+            return JSON.parseObject(responseString).getJSONObject("data").getString("token");
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

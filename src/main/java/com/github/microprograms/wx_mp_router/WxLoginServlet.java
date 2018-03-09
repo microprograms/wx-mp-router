@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.microprograms.wx_mp_router.utils.Fn;
 import com.typesafe.config.Config;
 
 import me.chanjar.weixin.common.util.http.URIUtil;
@@ -31,10 +32,10 @@ public class WxLoginServlet extends HttpServlet {
             JSONObject state = new JSONObject();
             state.put("redirect_uri", redirect_uri);
             Config config = Fn.getConfig();
-            String baseUri = config.getString("baseUri");
+            String wxOAuth2RedirectUri = config.getString("wxOAuth2RedirectUri");
             String appId = config.getString("appId");
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-            response.setHeader("Location", oauth2buildAuthorizationUrl(appId, baseUri + "/oauth2", scope, URIUtil.encodeURIComponent(state.toJSONString())));
+            response.setHeader("Location", oauth2buildAuthorizationUrl(appId, wxOAuth2RedirectUri, scope, URIUtil.encodeURIComponent(state.toJSONString())));
         } catch (Exception e) {
             log.error("", e);
         }

@@ -1,4 +1,4 @@
-package com.github.microprograms.wx_mp_router;
+package com.github.microprograms.wx_mp_router.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +17,10 @@ public class Fn {
 
     static {
         WxMpInMemoryConfigStorage storage = new WxMpInMemoryConfigStorage();
-        storage.setAppId(config.getString("appId"));
-        storage.setSecret(config.getString("secret"));
-        storage.setToken(config.getString("token"));
-        storage.setAesKey(config.getString("aesKey"));
+        storage.setAppId(config.getString("wxAppId"));
+        storage.setSecret(config.getString("wxSecret"));
+        storage.setToken(config.getString("wxToken"));
+        storage.setAesKey(config.getString("wxAesKey"));
         log.info("initWeixin -> {}", storage.toString());
         wxMpService = new WxMpServiceApacheHttpClientImpl();
         wxMpService.setWxMpConfigStorage(storage);

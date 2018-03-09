@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.microprograms.wx_mp_router.utils.Fn;
+
 @WebServlet("/echo")
 public class WxMpEndpointServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(WxMpEndpointServlet.class);

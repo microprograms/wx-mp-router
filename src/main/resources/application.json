@@ -1,7 +1,8 @@
 {
-	"baseUri": "http://47.104.17.187/wx-mp-router",
-	"appId": "wxa9095424d704f809",
-	"secret": "5b2b7bf38a479a2369bfab3dcea60e7f",
-	"token": "wxmprouter",
-	"aesKey": "Vnrba9iCofS7AOrYYJDBfor3CXNviWe4cB9Z49Vpksv"
+	"loginApiUrl": "http://47.104.17.187:9090",
+	"wxOAuth2RedirectUri": "http://47.104.17.187/wx-mp-router/oauth2",
+	"wxAppId": "wxa9095424d704f809",
+	"wxSecret": "5b2b7bf38a479a2369bfab3dcea60e7f",
+	"wxToken": "wxmprouter",
+	"wxAesKey": "Vnrba9iCofS7AOrYYJDBfor3CXNviWe4cB9Z49Vpksv"
 }
