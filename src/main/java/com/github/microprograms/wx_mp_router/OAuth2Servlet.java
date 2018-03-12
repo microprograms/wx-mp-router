@@ -35,6 +35,7 @@ public class OAuth2Servlet extends HttpServlet {
             String token = OAuth2CodeCache.getIfPresent(code);
             if (StringUtils.isBlank(token)) {
                 token = getToken(code);
+                OAuth2CodeCache.put(code, token);
             }
             JSONObject state = JSON.parseObject(request.getParameter("state"));
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
