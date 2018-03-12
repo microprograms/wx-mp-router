@@ -16,21 +16,11 @@ public class OAuth2CodeCache {
             // 构建cache实例
             .build();
 
-    public static boolean exist(String code) {
-        return cache.getIfPresent(code) != null;
+    public static String getIfPresent(String code) {
+        return cache.getIfPresent(code);
     }
 
-    public static void put(String code) {
-        cache.put(code, code);
-    }
-
-    public static void main(String[] args) throws Exception {
-        String code = "081YJFkQ1UPat81Kl0lQ1IA2lQ1YJFkO";
-        System.out.println(exist(code));
-        put(code);
-        for (int i = 0; i < 10; i++) {
-            System.out.println(exist(code));
-            Thread.sleep(10 * 1000);
-        }
+    public static void put(String code, String token) {
+        cache.put(code, token);
     }
 }
