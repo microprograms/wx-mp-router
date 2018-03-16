@@ -20,6 +20,6 @@ public class TestServlet extends HttpServlet {
         log.info("test -> Hello World!");
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println("Hello World!");
+        response.getWriter().println("test");
     }
 }

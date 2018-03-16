@@ -7,11 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.microprograms.wx_mp_router.utils.Fn;
 import com.typesafe.config.Config;
 
@@ -29,19 +27,19 @@ public class WxLoginServlet extends HttpServlet {
         String scope = request.getParameter("scope");
         log.info("wxLogin -> redirect_uri={}, scope={}", redirect_uri, scope);
         try {
-            JSONObject state = new JSONObject();
-            state.put("redirect_uri", redirect_uri);
             Config config = Fn.getConfig();
-            String wxOAuth2RedirectUri = config.getString("wxOAuth2RedirectUri");
+            String wxOAuth2RedirectUri = String.format("%s?redirect_uri=%s", config.getString("wxOAuth2RedirectUri"), redirect_uri);
             String wxAppId = config.getString("wxAppId");
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-            response.setHeader("Location", oauth2buildAuthorizationUrl(wxAppId, wxOAuth2RedirectUri, scope, URIUtil.encodeURIComponent(state.toJSONString())));
+            String oauth2AuthorizationUrl = oauth2buildAuthorizationUrl(wxAppId, wxOAuth2RedirectUri, scope);
+            log.info("wxLogin -> oauth2AuthorizationUrl={}", oauth2AuthorizationUrl);
+            response.setHeader("Location", oauth2AuthorizationUrl);
         } catch (Exception e) {
             log.error("", e);
         }
     }
 
-    public static String oauth2buildAuthorizationUrl(String appId, String redirectURI, String scope, String state) {
-        return String.format(CONNECT_OAUTH2_AUTHORIZE_URL, appId, URIUtil.encodeURIComponent(redirectURI), scope, StringUtils.trimToEmpty(state));
+    public static String oauth2buildAuthorizationUrl(String appId, String redirectURI, String scope) {
+        return String.format(CONNECT_OAUTH2_AUTHORIZE_URL, appId, URIUtil.encodeURIComponent(redirectURI), scope, "state");
     }
 }

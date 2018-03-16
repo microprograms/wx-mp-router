@@ -29,17 +29,20 @@ public class OAuth2Servlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.info("oauth2");
+        log.info("oauth2, url={}, queryString={}", request.getRequestURL(), request.getQueryString());
         try {
             String code = request.getParameter("code");
+            String redirect_uri = request.getParameter("redirect_uri");
+            log.info("oauth2, code={}, redirect_uri={}", code, redirect_uri);
             String token = OAuth2CodeCache.getIfPresent(code);
             if (StringUtils.isBlank(token)) {
                 token = getToken(code);
                 OAuth2CodeCache.put(code, token);
             }
-            JSONObject state = JSON.parseObject(request.getParameter("state"));
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-            response.setHeader("Location", String.format("%s?token=%s", state.getString("redirect_uri"), token));
+            String redirect_uri_with_token = String.format("%s?token=%s", redirect_uri, token);
+            log.info("oauth2, redirect_uri_with_token={}", redirect_uri_with_token);
+            response.setHeader("Location", redirect_uri_with_token);
         } catch (Exception e) {
             log.error("", e);
         }
