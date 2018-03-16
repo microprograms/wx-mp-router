@@ -8,6 +8,7 @@
 <title>首页</title>
 <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script src="json2.js"></script>
 <script type="text/javascript">
 	function getQueryString() {
 		var qs = location.search.substr(1), // 获取url中"?"符后的字串  
@@ -27,7 +28,6 @@
 <script type="text/javascript">
 	var qs = getQueryString();
 	var token = qs["token"];
-	alert("token:" + token);
 	
 	$.post("http://www.chekela.com:9090", JSON.stringify({
 		"apiName" : "car_carat_app_api.Wx_BuildJsSdkConfig_Api",
@@ -35,9 +35,6 @@
 		"url" : window.location.href
 	}), function(resp) {
 		var wxConfig = resp.data;
-		for (x in wxConfig) {
-			alert(x + ": " + wxConfig[x]);
-		}
 
 		wx.config({
 			debug : true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -53,23 +50,26 @@
 			
 			$.post("http://www.chekela.com:9090", JSON.stringify({
 			    "apiName": "car_carat_app_api.Car_Buy_Api",
-			    "token": "e9f9d5fe-4787-4b37-b466-049cf74ba756",
-			    "carId": "efa173b6-d890-4b57-9015-bfe68ceb9535",
+			    "token": token,
+			    "carId": "2043056a-2a50-4642-8954-3498c10a1ae0",
 			    "vehicleConfiguration": "{\"车型\":\"总统\",\"配置\":\"低配版\",\"颜色\":\"白色\"}",
-			    "contactsId": "526e53d6-6405-4e7a-bbc9-1648b28d96e6",
+			    "contactsId": "7fb5b031-b786-42e9-bd22-8ebe259cb096",
 			    "comment": "这里是备注",
 			    "useCaratCoinAmount": 0,
 			    "useCoupon": "",
 			    "pay_channel": 2
 			}), function(resp) {
+				alert(JSON.stringify(resp));
 				wx.chooseWXPay({
+					"appId": resp.wxPayPrePaymentOrder.appId,
 					"timestamp": resp.wxPayPrePaymentOrder.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
 					"nonceStr": resp.wxPayPrePaymentOrder.nonceStr, // 支付签名随机串，不长于 32 位
-					"package": "prepay_id="+resp.wxPayPrePaymentOrder.prepayId, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+					"package": resp.wxPayPrePaymentOrder.packageStr, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
 					"signType": "MD5", // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
 					"paySign": resp.wxPayPrePaymentOrder.sign, // 支付签名
 					success: function (res) {
 					// 支付成功后的回调函数
+					alert(res);
 					}
 				});
 			});
