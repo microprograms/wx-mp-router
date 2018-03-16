@@ -1,8 +1,8 @@
 {
-	"loginApiUrl": "http://47.104.17.187:9090",
-	"wxOAuth2RedirectUri": "http://47.104.17.187/wx-mp-router/oauth2",
-	"wxAppId": "wxa9095424d704f809",
-	"wxSecret": "5b2b7bf38a479a2369bfab3dcea60e7f",
+	"loginApiUrl": "http://www.chekela.com:9090",
+	"wxOAuth2RedirectUri": "http://www.chekela.com/wx-mp-router/oauth2",
+	"wxAppId": "wx022c8e3561e6589a",
+	"wxSecret": "8a236dabffcc43f5a1833bad9d2fbe2e",
 	"wxToken": "wxmprouter",
 	"wxAesKey": "Vnrba9iCofS7AOrYYJDBfor3CXNviWe4cB9Z49Vpksv"
 }
