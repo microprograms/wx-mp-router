@@ -55,12 +55,12 @@ public class OAuth2Servlet extends HttpServlet {
         return getToken(user.getOpenId(), user.getNickname(), user.getHeadImgUrl());
     }
 
-    private static String getToken(String wxOpenId, String wxNicknme, String wxAvatarImgUrl) {
+    private static String getToken(String wxOpenId, String wxNickname, String wxAvatarImgUrl) {
         try {
             JSONObject param = new JSONObject();
             param.put("apiName", "car_carat_app_api.System_WxLogin_Api");
             param.put("wxOpenId", wxOpenId);
-            param.put("wxNicknme", wxNicknme);
+            param.put("wxNickname", wxNickname);
             param.put("wxAvatarImgUrl", wxAvatarImgUrl);
             String responseString = ApiUtils.post(Fn.getConfig().getString("loginApiUrl"), param);
             return JSON.parseObject(responseString).getJSONObject("data").getString("token");
