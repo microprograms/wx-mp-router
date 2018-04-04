@@ -34,7 +34,7 @@ public class UpdateMenuServlet extends HttpServlet {
             WxMenuButton loginButton = new WxMenuButton();
             loginButton.setName("登录");
             loginButton.setType(MenuButtonType.VIEW);
-            loginButton.setUrl("http://www.chekela.com/car-carat-h5/login.html");
+            loginButton.setUrl("http://car-carat-h5.chekela.com/index.html");
             buttons.add(loginButton);
             wxMenu.setButtons(buttons);
             Fn.getWxMpService().getMenuService().menuCreate(wxMenu);
