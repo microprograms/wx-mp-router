@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import com.github.microprograms.wx_mp_router.utils.Fn;
 
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+
 @WebServlet("/echo")
 public class WxMpEndpointServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(WxMpEndpointServlet.class);
@@ -29,7 +33,8 @@ public class WxMpEndpointServlet extends HttpServlet {
             String nonce = request.getParameter("nonce");
             String timestamp = request.getParameter("timestamp");
 
-            if (!Fn.getWxMpService().checkSignature(timestamp, nonce, signature)) {
+            WxMpService wxMpService = Fn.getWxMpService();
+            if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
                 log.error("消息签名不正确，说明不是公众平台发过来的消息 -> signature={}, nonce={}, timestamp={}", signature, nonce, timestamp);
                 response.getWriter().println("非法请求");
                 return;
@@ -42,8 +47,27 @@ public class WxMpEndpointServlet extends HttpServlet {
                 return;
             }
 
-            log.error("不可识别的加密类型");
+            String encryptType = StringUtils.isBlank(request.getParameter("encrypt_type")) ? "raw" : request.getParameter("encrypt_type");
+
+            if ("raw".equals(encryptType)) {
+                // 明文传输的消息
+                WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request.getInputStream());
+                WxMpXmlOutMessage outMessage = Fn.getWxMpRouter().route(inMessage);
+                response.getWriter().println(outMessage == null ? "" : outMessage.toXml());
+                return;
+            }
+
+            if ("aes".equals(encryptType)) {
+                // 是aes加密的消息
+                String msgSignature = request.getParameter("msg_signature");
+                WxMpXmlMessage inMessage = WxMpXmlMessage.fromEncryptedXml(request.getInputStream(), wxMpService.getWxMpConfigStorage(), timestamp, nonce, msgSignature);
+                WxMpXmlOutMessage outMessage = Fn.getWxMpRouter().route(inMessage);
+                response.getWriter().println(outMessage == null ? "" : outMessage.toEncryptedXml(wxMpService.getWxMpConfigStorage()));
+                return;
+            }
+
             response.getWriter().println("不可识别的加密类型");
+            return;
         } catch (Exception e) {
             log.error("", e);
             throw e;
