@@ -1,6 +1,7 @@
 {
 	"uploadFileApiUrl": "http://47.104.17.187:8082/micro-file-server",
 	"loginApiUrl": "http://car-carat-h5.chekela.com:9090",
+	"bindDealerApiUrl": "http://car-carat-h5.chekela.com:9090",
 	"wxOAuth2RedirectUri": "http://car-carat-h5.chekela.com/wx-mp-router/oauth2",
 	"wxAppId": "wx022c8e3561e6589a",
 	"wxSecret": "8a236dabffcc43f5a1833bad9d2fbe2e",
