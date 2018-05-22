@@ -63,12 +63,17 @@ public class UpdateMenuServlet extends HttpServlet {
                 boolean hasSubButtons = !subButtons.isEmpty();
                 if (hasSubButtons) {
                     button.setSubButtons(subButtons);
+                    buttons.add(button);
+                    continue;
                 }
                 String url = wxMenuButton.getString("url");
                 boolean hasUrl = StringUtils.isNotBlank(url);
-                if (!hasSubButtons && hasUrl) {
+                if (hasUrl) {
                     button.setType(MenuButtonType.VIEW);
                     button.setUrl(url);
+                } else {
+                    button.setType(MenuButtonType.CLICK);
+                    button.setKey(wxMenuButton.getString("id"));
                 }
                 buttons.add(button);
             }
@@ -84,8 +89,15 @@ public class UpdateMenuServlet extends HttpServlet {
             if (parentId.equals(wxMenuButton.getString("parentId"))) {
                 WxMenuButton subButton = new WxMenuButton();
                 subButton.setName(wxMenuButton.getString("name"));
-                subButton.setType(MenuButtonType.VIEW);
-                subButton.setUrl(wxMenuButton.getString("url"));
+                String url = wxMenuButton.getString("url");
+                boolean hasUrl = StringUtils.isNotBlank(url);
+                if (hasUrl) {
+                    subButton.setType(MenuButtonType.VIEW);
+                    subButton.setUrl(url);
+                } else {
+                    subButton.setType(MenuButtonType.CLICK);
+                    subButton.setKey(wxMenuButton.getString("id"));
+                }
                 subButtons.add(subButton);
             }
         }
