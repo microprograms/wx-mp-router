@@ -48,7 +48,7 @@ public class Fn {
                             String qrscene = eventKey.substring("qrscene_".length());
                             bindDealer(fromUser, qrscene);
                         }
-                        return null;
+                        return AutoReplyUtils.buildWxMpXmlOutMessage(AutoReplyUtils.getSubscribeAutoReply(), wxMessage.getToUser(), fromUser);
                     }
                 }).end()
                 // 扫码
@@ -61,6 +61,19 @@ public class Fn {
                             bindDealer(fromUser, eventKey);
                         }
                         return null;
+                    }
+                }).end()
+                // 关键字
+                .rule().async(false).handler(new WxMpMessageHandler() {
+                    @Override
+                    public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context, WxMpService wxMpService, WxSessionManager sessionManager) throws WxErrorException {
+                        String content = wxMessage.getContent();
+                        for (JSONObject config : AutoReplyUtils.getKeywordAutoReply()) {
+                            if (StringUtils.isNoneBlank(content) && content.contains(config.getString("keyword"))) {
+                                return AutoReplyUtils.buildWxMpXmlOutMessage(config, wxMessage.getToUser(), wxMessage.getFromUser());
+                            }
+                        }
+                        return AutoReplyUtils.buildWxMpXmlOutMessage(AutoReplyUtils.getRecvMessageAutoReply(), wxMessage.getToUser(), wxMessage.getFromUser());
                     }
                 }).end();
     }
